@@ -1,11 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
-export const BlockPost: CollectionConfig = {
-    slug: 'block-post',
+export const ExamplePosts: CollectionConfig = {
+    slug: 'example-posts',
     admin: {
         useAsTitle: 'title',
         defaultColumns: ['title', 'author', 'status', 'publishedAt'],
-        description: 'A more structured form of blog post',
+        description: 'Blog posts with rich content and images.',
     },
     access: {
         // Anyone can read published posts
@@ -98,35 +98,78 @@ export const BlockPost: CollectionConfig = {
             },
         },
         {
+            name: 'excerpt',
+            type: 'textarea',
+            admin: {
+                description: 'Short summary shown in post listings and social previews.',
+                rows: 3,
+            },
+        },
+        {
             name: 'content',
-            type: 'blocks',
-            blocks: [
+            type: 'richText',
+            required: true,
+        },
+        {
+            name: 'gallery',
+            type: 'array',
+            label: 'Image Gallery',
+            admin: {
+                description: 'Additional images to display in the post.',
+            },
+            fields: [
                 {
-                    slug: 'text',
-                    fields: [
-                        {
-                            name: 'text',
-                            type: 'richText',
-                            required: true,
-                        },
-                    ],
+                    name: 'image',
+                    type: 'upload',
+                    relationTo: 'media',
+                    required: true,
                 },
                 {
-                    slug: 'image',
-                    fields: [
-                        {
-                            name: 'image',
-                            type: 'upload',
-                            relationTo: 'media',
-                            required: true,
-                        },
-                        {
-                            name: 'caption',
-                            type: 'text',
-                        },
-                    ],
+                    name: 'caption',
+                    type: 'text',
                 },
             ],
-        }
+        },
+        {
+            name: 'tags',
+            type: 'text',
+            hasMany: true,
+            admin: {
+                description: 'Comma-separated tags for categorising the post.',
+                position: 'sidebar',
+            },
+        },
+        {
+            name: 'seo',
+            type: 'group',
+            label: 'SEO',
+            fields: [
+                {
+                    name: 'metaTitle',
+                    type: 'text',
+                    admin: {
+                        description: 'Defaults to the post title if left blank.',
+                    },
+                },
+                {
+                    name: 'metaDescription',
+                    type: 'textarea',
+                    admin: {
+                        description: 'Defaults to the excerpt if left blank.',
+                        rows: 3,
+                    },
+                },
+                {
+                    name: 'ogImage',
+                    type: 'upload',
+                    relationTo: 'media',
+                    label: 'Open Graph Image',
+                    admin: {
+                        description: 'Defaults to the featured image if left blank.',
+                    },
+                },
+            ],
+        },
     ],
+    timestamps: true,
 }

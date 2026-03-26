@@ -69,9 +69,9 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    posts: Post;
     'post-test-array': PostTestArray;
     'block-post': BlockPost;
+    posts: Post;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -81,9 +81,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    posts: PostsSelect<false> | PostsSelect<true>;
     'post-test-array': PostTestArraySelect<false> | PostTestArraySelect<true>;
     'block-post': BlockPostSelect<false> | BlockPostSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -164,79 +164,6 @@ export interface Media {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
-}
-/**
- * Blog posts with rich content and images.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts".
- */
-export interface Post {
-  id: number;
-  title: string;
-  /**
-   * URL-friendly identifier. Auto-populated from title if left blank.
-   */
-  slug: string;
-  status: 'draft' | 'published';
-  /**
-   * Leave blank to use the current date when publishing.
-   */
-  publishedAt?: string | null;
-  author: number | User;
-  /**
-   * Main image displayed at the top of the post and in previews.
-   */
-  featuredImage?: (number | null) | Media;
-  /**
-   * Short summary shown in post listings and social previews.
-   */
-  excerpt?: string | null;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * Additional images to display in the post.
-   */
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Comma-separated tags for categorising the post.
-   */
-  tags?: string[] | null;
-  seo?: {
-    /**
-     * Defaults to the post title if left blank.
-     */
-    metaTitle?: string | null;
-    /**
-     * Defaults to the excerpt if left blank.
-     */
-    metaDescription?: string | null;
-    /**
-     * Defaults to the featured image if left blank.
-     */
-    ogImage?: (number | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * A more structured form of blog post
@@ -332,6 +259,106 @@ export interface BlockPost {
   createdAt: string;
 }
 /**
+ * Blog posts with rich content and images.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * URL-friendly identifier. Auto-populated from title if left blank.
+   */
+  slug: string;
+  collaborators?:
+    | {
+        name: string;
+        role: string;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  status: 'draft' | 'published';
+  /**
+   * Leave blank to use the current date when publishing.
+   */
+  publishedAt?: string | null;
+  author: number | User;
+  /**
+   * Comma-separated tags for categorising the post.
+   */
+  tags?: string[] | null;
+  /**
+   * Main image displayed at the top of the post and in previews.
+   */
+  featuredImage?: (number | null) | Media;
+  content?:
+    | (
+        | {
+            text: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'heading';
+          }
+        | {
+            text: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'subheading';
+          }
+        | {
+            text: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'paragraph';
+          }
+        | {
+            images?:
+              | {
+                  image: number | Media;
+                  caption?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'images';
+          }
+      )[]
+    | null;
+  seo?: {
+    /**
+     * Defaults to the post title if left blank.
+     */
+    metaTitle?: string | null;
+    /**
+     * Defaults to the excerpt if left blank.
+     */
+    metaDescription?: string | null;
+    /**
+     * Defaults to the featured image if left blank.
+     */
+    ogImage?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -364,16 +391,16 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'posts';
-        value: number | Post;
-      } | null)
-    | ({
         relationTo: 'post-test-array';
         value: number | PostTestArray;
       } | null)
     | ({
         relationTo: 'block-post';
         value: number | BlockPost;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -457,37 +484,6 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts_select".
- */
-export interface PostsSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  status?: T;
-  publishedAt?: T;
-  author?: T;
-  featuredImage?: T;
-  excerpt?: T;
-  content?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
-  tags?: T;
-  seo?:
-    | T
-    | {
-        metaTitle?: T;
-        metaDescription?: T;
-        ogImage?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "post-test-array_select".
  */
 export interface PostTestArraySelect<T extends boolean = true> {
@@ -538,6 +534,74 @@ export interface BlockPostSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  collaborators?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        link?: T;
+        id?: T;
+      };
+  status?: T;
+  publishedAt?: T;
+  author?: T;
+  tags?: T;
+  featuredImage?: T;
+  content?:
+    | T
+    | {
+        heading?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
+        subheading?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
+        paragraph?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
+        images?:
+          | T
+          | {
+              images?:
+                | T
+                | {
+                    image?: T;
+                    caption?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        ogImage?: T;
       };
   updatedAt?: T;
   createdAt?: T;

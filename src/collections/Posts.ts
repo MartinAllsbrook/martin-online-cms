@@ -1,11 +1,12 @@
 import type { CollectionConfig } from 'payload'
+import { fa } from 'payload/i18n/fa'
 
-export const BlockPost: CollectionConfig = {
-    slug: 'block-post',
+export const Posts: CollectionConfig = {
+    slug: 'posts',
     admin: {
         useAsTitle: 'title',
         defaultColumns: ['title', 'author', 'status', 'publishedAt'],
-        description: 'A more structured form of blog post',
+        description: 'Blog posts with rich content and images.',
     },
     access: {
         // Anyone can read published posts
@@ -45,6 +46,31 @@ export const BlockPost: CollectionConfig = {
                     },
                 ],
             },
+        },
+        {
+            name: 'collaborators',
+            type: 'array',
+            fields: [
+                {
+                    type: 'row',
+                    fields: [
+                        {
+                            name: 'name',
+                            type: 'text',
+                            required: true,
+                        },
+                        {
+                            name: 'role',
+                            type: 'text',
+                            required: true,
+                        },
+                        {
+                            name: 'link',
+                            type: 'text',
+                        }
+                    ],
+                },
+            ],
         },
         {
             name: 'status',
@@ -90,6 +116,15 @@ export const BlockPost: CollectionConfig = {
             },
         },
         {
+            name: 'tags',
+            type: 'text',
+            hasMany: true,
+            admin: {
+                description: 'Comma-separated tags for categorising the post.',
+                position: 'sidebar',
+            },
+        },
+        {
             name: 'featuredImage',
             type: 'upload',
             relationTo: 'media',
@@ -102,7 +137,27 @@ export const BlockPost: CollectionConfig = {
             type: 'blocks',
             blocks: [
                 {
-                    slug: 'text',
+                    slug: 'heading',
+                    fields: [
+                        {
+                            name: 'text',
+                            type: 'text',
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    slug: 'subheading',
+                    fields: [
+                        {
+                            name: 'text',
+                            type: 'text',
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    slug: 'paragraph',
                     fields: [
                         {
                             name: 'text',
@@ -112,21 +167,58 @@ export const BlockPost: CollectionConfig = {
                     ],
                 },
                 {
-                    slug: 'image',
+                    slug: 'images',
                     fields: [
                         {
-                            name: 'image',
-                            type: 'upload',
-                            relationTo: 'media',
-                            required: true,
-                        },
-                        {
-                            name: 'caption',
-                            type: 'text',
-                        },
+                            name: 'images',
+                            type: 'array',
+                            fields: [
+                                {
+                                name: 'image',
+                                type: 'upload',
+                                relationTo: 'media',
+                                required: true,
+                                },
+                                {
+                                    name: 'caption',
+                                    type: 'text',
+                                },
+                            ],
+                        }
                     ],
                 },
             ],
-        }
+        },
+        {
+            name: 'seo',
+            type: 'group',
+            label: 'SEO',
+            fields: [
+                {
+                    name: 'metaTitle',
+                    type: 'text',
+                    admin: {
+                        description: 'Defaults to the post title if left blank.',
+                    },
+                },
+                {
+                    name: 'metaDescription',
+                    type: 'textarea',
+                    admin: {
+                        description: 'Defaults to the excerpt if left blank.',
+                        rows: 3,
+                    },
+                },
+                {
+                    name: 'ogImage',
+                    type: 'upload',
+                    relationTo: 'media',
+                    label: 'Open Graph Image',
+                    admin: {
+                        description: 'Defaults to the featured image if left blank.',
+                    },
+                },
+            ],
+        },
     ],
 }
