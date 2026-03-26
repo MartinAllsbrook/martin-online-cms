@@ -70,6 +70,8 @@ export interface Config {
     users: User;
     media: Media;
     posts: Post;
+    'post-test-array': PostTestArray;
+    'block-post': BlockPost;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +82,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    'post-test-array': PostTestArraySelect<false> | PostTestArraySelect<true>;
+    'block-post': BlockPostSelect<false> | BlockPostSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -235,6 +239,99 @@ export interface Post {
   createdAt: string;
 }
 /**
+ * A more structured form of blog post
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "post-test-array".
+ */
+export interface PostTestArray {
+  id: number;
+  title: string;
+  /**
+   * URL-friendly identifier. Auto-populated from title if left blank.
+   */
+  slug: string;
+  status: 'draft' | 'published';
+  /**
+   * Leave blank to use the current date when publishing.
+   */
+  publishedAt?: string | null;
+  author: number | User;
+  /**
+   * Main image displayed at the top of the post and in previews.
+   */
+  featuredImage?: (number | null) | Media;
+  content: {
+    body?: string | null;
+    heading?: string | null;
+    image?: (number | null) | Media;
+    id?: string | null;
+  }[];
+  /**
+   * Comma-separated tags for categorising the post.
+   */
+  tags?: string[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * A more structured form of blog post
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "block-post".
+ */
+export interface BlockPost {
+  id: number;
+  title: string;
+  /**
+   * URL-friendly identifier. Auto-populated from title if left blank.
+   */
+  slug: string;
+  status: 'draft' | 'published';
+  /**
+   * Leave blank to use the current date when publishing.
+   */
+  publishedAt?: string | null;
+  author: number | User;
+  /**
+   * Main image displayed at the top of the post and in previews.
+   */
+  featuredImage?: (number | null) | Media;
+  content?:
+    | (
+        | {
+            text: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            image: number | Media;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'image';
+          }
+      )[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -269,6 +366,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'posts';
         value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'post-test-array';
+        value: number | PostTestArray;
+      } | null)
+    | ({
+        relationTo: 'block-post';
+        value: number | BlockPost;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -377,6 +482,62 @@ export interface PostsSelect<T extends boolean = true> {
         metaTitle?: T;
         metaDescription?: T;
         ogImage?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "post-test-array_select".
+ */
+export interface PostTestArraySelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  status?: T;
+  publishedAt?: T;
+  author?: T;
+  featuredImage?: T;
+  content?:
+    | T
+    | {
+        body?: T;
+        heading?: T;
+        image?: T;
+        id?: T;
+      };
+  tags?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "block-post_select".
+ */
+export interface BlockPostSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  status?: T;
+  publishedAt?: T;
+  author?: T;
+  featuredImage?: T;
+  content?:
+    | T
+    | {
+        text?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
+        image?:
+          | T
+          | {
+              image?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
