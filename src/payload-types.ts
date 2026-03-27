@@ -206,23 +206,31 @@ export interface Post {
    */
   featuredImage?: (number | null) | Media;
   /**
-   * The main body of the post, supporting rich text formatting.
+   * Add multiple sections to build the post content.
    */
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  sections?:
+    | {
+        /**
+         * Section supporting rich text formatting.
+         */
+        content: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
   seo?: {
     /**
      * Defaults to the post title if left blank.
@@ -418,7 +426,12 @@ export interface PostsSelect<T extends boolean = true> {
   publishedAt?: T;
   tags?: T;
   featuredImage?: T;
-  content?: T;
+  sections?:
+    | T
+    | {
+        content?: T;
+        id?: T;
+      };
   seo?:
     | T
     | {

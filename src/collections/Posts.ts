@@ -1,4 +1,5 @@
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { ImageSetBlock } from '@/blocks/ImageSet'
+import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { CollectionConfig } from 'payload'
 
 export const Posts: CollectionConfig = {
@@ -54,7 +55,7 @@ export const Posts: CollectionConfig = {
             admin: {
                 description: 'The date displayed on the post.',
                 date: {
-                    pickerAppearance: 'dayAndTime',
+                    pickerAppearance: 'dayOnly',
                 },
             },
         },
@@ -138,21 +139,37 @@ export const Posts: CollectionConfig = {
 
         //#region Content
         {
-            name: 'content',
-            type: 'richText',
-            label: 'Content',
-            admin: {
-                description: 'The main body of the post, supporting rich text formatting.',
+            name: 'sections',
+            type: 'array',
+            labels: {
+                singular: 'Section',
+                plural: 'Sections',
             },
-            required: true,
+            admin: {
+                description: 'Add multiple sections to build the post content.',
+            },
+            fields: [
+                {
+                    name: 'content',
+                    type: 'richText',
+                    label: 'Content',
+                    admin: {
+                        description: 'Section supporting rich text formatting.',
+                    },
+                    required: true,
 
-            editor: lexicalEditor({
-                features: ({ defaultFeatures, rootFeatures }) => [
-                    ...defaultFeatures,
-                    ...rootFeatures,
-                    // Custom features can be added here
-                ],
-            }),
+                    editor: lexicalEditor({
+                        features: ({ defaultFeatures, rootFeatures }) => [
+                            ...defaultFeatures,
+                            ...rootFeatures,
+                            // Custom features can be added here
+                            BlocksFeature({
+                                blocks: [ImageSetBlock],
+                            })
+                        ],
+                    }),
+                },
+            ],
         },
         //#endregion
 
