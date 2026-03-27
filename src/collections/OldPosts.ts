@@ -1,11 +1,10 @@
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { CollectionConfig } from 'payload'
 
-export const Posts: CollectionConfig = {
-    slug: 'posts',
+export const OldPosts: CollectionConfig = {
+    slug: 'old-posts',
     admin: {
         useAsTitle: 'title',
-        defaultColumns: ['title', 'status', 'publishedAt', 'tags'],
+        defaultColumns: ['title', 'author', 'status', 'publishedAt'],
         description: 'Blog posts with rich content and images.',
     },
     access: {
@@ -19,7 +18,6 @@ export const Posts: CollectionConfig = {
         delete: ({ req: { user } }) => Boolean(user),
     },
     fields: [
-        //#region Common
         {
             name: 'title',
             type: 'text',
@@ -46,16 +44,6 @@ export const Posts: CollectionConfig = {
                         .replace(/^-+|-+$/g, '')
                     },
                 ],
-            },
-        },
-        {
-            name: 'date',
-            type: 'date',
-            admin: {
-                description: 'The date displayed on the post.',
-                date: {
-                    pickerAppearance: 'dayAndTime',
-                },
             },
         },
         {
@@ -118,6 +106,15 @@ export const Posts: CollectionConfig = {
             },
         },
         {
+            name: 'author',
+            type: 'relationship',
+            relationTo: 'users',
+            required: true,
+            admin: {
+                position: 'sidebar',
+            },
+        },
+        {
             name: 'tags',
             type: 'text',
             hasMany: true,
@@ -134,29 +131,63 @@ export const Posts: CollectionConfig = {
                 description: 'Main image displayed at the top of the post and in previews.',
             },
         },
-        //#endregion
-
-        //#region Content
         {
             name: 'content',
-            type: 'richText',
-            label: 'Content',
-            admin: {
-                description: 'The main body of the post, supporting rich text formatting.',
-            },
-            required: true,
-
-            editor: lexicalEditor({
-                features: ({ defaultFeatures, rootFeatures }) => [
-                    ...defaultFeatures,
-                    ...rootFeatures,
-                    // Custom features can be added here
-                ],
-            }),
+            type: 'blocks',
+            blocks: [
+                {
+                    slug: 'heading',
+                    fields: [
+                        {
+                            name: 'text',
+                            type: 'text',
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    slug: 'subheading',
+                    fields: [
+                        {
+                            name: 'text',
+                            type: 'text',
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    slug: 'paragraph',
+                    fields: [
+                        {
+                            name: 'text',
+                            type: 'richText',
+                            required: true,
+                        },
+                    ],
+                },
+                {
+                    slug: 'images',
+                    fields: [
+                        {
+                            name: 'images',
+                            type: 'array',
+                            fields: [
+                                {
+                                    name: 'image',
+                                    type: 'upload',
+                                    relationTo: 'media',
+                                    required: true,
+                                },
+                                {
+                                    name: 'caption',
+                                    type: 'text',
+                                },
+                            ],
+                        }
+                    ],
+                },
+            ],
         },
-        //#endregion
-
-        //#region SEO
         {
             name: 'seo',
             type: 'group',
@@ -188,6 +219,5 @@ export const Posts: CollectionConfig = {
                 },
             ],
         },
-        //#endregion
     ],
 }

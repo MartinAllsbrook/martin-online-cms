@@ -11,9 +11,8 @@ import { r2Storage } from '@payloadcms/storage-r2'
 // Import collections
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { PostTestArray } from './collections/PostTestArray'
-import { BlockPost } from './collections/BlockPost'
 import { Posts } from './collections/Posts'
+import { RichTextArticle } from './collections/RichTextArticle'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -54,7 +53,13 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, PostTestArray, BlockPost, Posts], // Add collections here
+  // Add collections here
+  collections: [
+    Users,
+    Media, 
+    Posts,
+    RichTextArticle
+  ], 
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
