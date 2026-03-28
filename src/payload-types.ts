@@ -70,7 +70,6 @@ export interface Config {
     users: User;
     media: Media;
     posts: Post;
-    'rich-text-articles': RichTextArticle;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -81,7 +80,6 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
-    'rich-text-articles': RichTextArticlesSelect<false> | RichTextArticlesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -206,67 +204,8 @@ export interface Post {
    */
   featuredImage?: (number | null) | Media;
   /**
-   * Add multiple sections to build the post content.
+   * Section supporting rich text formatting.
    */
-  sections?:
-    | {
-        /**
-         * Section supporting rich text formatting.
-         */
-        content: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  seo?: {
-    /**
-     * Defaults to the post title if left blank.
-     */
-    metaTitle?: string | null;
-    /**
-     * Defaults to the excerpt if left blank.
-     */
-    metaDescription?: string | null;
-    /**
-     * Defaults to the featured image if left blank.
-     */
-    ogImage?: (number | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Articles with a heavily customised Lexical rich text editor.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rich-text-articles".
- */
-export interface RichTextArticle {
-  id: number;
-  title: string;
-  /**
-   * URL-friendly identifier. Auto-populated from title if left blank.
-   */
-  slug: string;
-  status: 'draft' | 'published';
-  publishedAt?: string | null;
-  /**
-   * Short summary shown in article listings.
-   */
-  excerpt?: string | null;
   content: {
     root: {
       type: string;
@@ -281,6 +220,20 @@ export interface RichTextArticle {
       version: number;
     };
     [k: string]: unknown;
+  };
+  seo?: {
+    /**
+     * Defaults to the post title if left blank.
+     */
+    metaTitle?: string | null;
+    /**
+     * Defaults to the excerpt if left blank.
+     */
+    metaDescription?: string | null;
+    /**
+     * Defaults to the featured image if left blank.
+     */
+    ogImage?: (number | null) | Media;
   };
   updatedAt: string;
   createdAt: string;
@@ -320,10 +273,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'posts';
         value: number | Post;
-      } | null)
-    | ({
-        relationTo: 'rich-text-articles';
-        value: number | RichTextArticle;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -426,12 +375,7 @@ export interface PostsSelect<T extends boolean = true> {
   publishedAt?: T;
   tags?: T;
   featuredImage?: T;
-  sections?:
-    | T
-    | {
-        content?: T;
-        id?: T;
-      };
+  content?: T;
   seo?:
     | T
     | {
@@ -439,20 +383,6 @@ export interface PostsSelect<T extends boolean = true> {
         metaDescription?: T;
         ogImage?: T;
       };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rich-text-articles_select".
- */
-export interface RichTextArticlesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  status?: T;
-  publishedAt?: T;
-  excerpt?: T;
-  content?: T;
   updatedAt?: T;
   createdAt?: T;
 }

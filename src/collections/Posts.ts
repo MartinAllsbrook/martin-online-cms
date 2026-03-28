@@ -139,37 +139,24 @@ export const Posts: CollectionConfig = {
 
         //#region Content
         {
-            name: 'sections',
-            type: 'array',
-            labels: {
-                singular: 'Section',
-                plural: 'Sections',
-            },
+            name: 'content',
+            type: 'richText',
+            label: 'Content',
             admin: {
-                description: 'Add multiple sections to build the post content.',
+                description: 'Section supporting rich text formatting.',
             },
-            fields: [
-                {
-                    name: 'content',
-                    type: 'richText',
-                    label: 'Content',
-                    admin: {
-                        description: 'Section supporting rich text formatting.',
-                    },
-                    required: true,
+            required: true,
 
-                    editor: lexicalEditor({
-                        features: ({ defaultFeatures, rootFeatures }) => [
-                            ...defaultFeatures,
-                            ...rootFeatures,
-                            // Custom features can be added here
-                            BlocksFeature({
-                                blocks: [ImageSetBlock],
-                            })
-                        ],
-                    }),
-                },
-            ],
+            editor: lexicalEditor({
+                features: ({ defaultFeatures, rootFeatures }) => [
+                    ...defaultFeatures,
+                    ...rootFeatures,
+                    // Custom features can be added here
+                    BlocksFeature({
+                        blocks: [ImageSetBlock],
+                    })
+                ],
+            }),
         },
         //#endregion
 

@@ -12,7 +12,6 @@ import { r2Storage } from '@payloadcms/storage-r2'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Posts } from './collections/Posts'
-import { RichTextArticle } from './collections/RichTextArticle'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -58,7 +57,6 @@ export default buildConfig({
     Users,
     Media, 
     Posts,
-    RichTextArticle
   ], 
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
