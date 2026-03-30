@@ -50,14 +50,26 @@ export const Posts: CollectionConfig = {
             },
         },
         {
-            name: 'date',
-            type: 'date',
-            admin: {
-                description: 'The date displayed on the post.',
-                date: {
-                    pickerAppearance: 'dayOnly',
+            type: 'row',
+            fields: [
+                {
+                    name: 'category',
+                    type: 'text',
+                    admin: {
+                        description: 'Category of the post.',
+                    },
                 },
-            },
+                {
+                    name: 'date',
+                    type: 'date',
+                    admin: {
+                        description: 'The date displayed on the post.',
+                        date: {
+                            pickerAppearance: 'dayOnly',
+                        },
+                    },
+                },
+            ],
         },
         {
             name: 'collaborators',
