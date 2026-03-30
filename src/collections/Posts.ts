@@ -4,6 +4,7 @@ import type { CollectionConfig } from 'payload'
 
 export const Posts: CollectionConfig = {
     slug: 'posts',
+    orderable: true,
     admin: {
         useAsTitle: 'title',
         defaultColumns: ['title', 'status', 'publishedAt', 'tags'],
