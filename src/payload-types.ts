@@ -179,6 +179,10 @@ export interface Post {
    */
   slug: string;
   /**
+   * Category of the post.
+   */
+  category?: string | null;
+  /**
    * The date displayed on the post.
    */
   date?: string | null;
@@ -362,6 +366,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  category?: T;
   date?: T;
   collaborators?:
     | T
