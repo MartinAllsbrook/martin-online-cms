@@ -182,7 +182,7 @@ export interface Post {
   /**
    * Category of the post.
    */
-  category?: string | null;
+  category: string;
   /**
    * The date displayed on the post.
    */
@@ -203,7 +203,7 @@ export interface Post {
   /**
    * Comma-separated tags for categorising the post.
    */
-  tags?: string[] | null;
+  tags: string[];
   /**
    * Main image displayed at the top of the post and in previews.
    */
