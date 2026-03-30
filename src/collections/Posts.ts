@@ -132,7 +132,6 @@ export const Posts: CollectionConfig = {
         {
             name: 'tags',
             type: 'text',
-            required: true,
             hasMany: true,
             admin: {
                 description: 'Comma-separated tags for categorising the post.',
