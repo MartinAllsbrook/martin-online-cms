@@ -61,12 +61,9 @@ export const Posts: CollectionConfig = {
                 },
                 {
                     name: 'date',
-                    type: 'date',
+                    type: 'text',
                     admin: {
                         description: 'The date displayed on the post.',
-                        date: {
-                            pickerAppearance: 'dayOnly',
-                        },
                     },
                 },
             ],
