@@ -173,6 +173,7 @@ export interface Media {
  */
 export interface Post {
   id: number;
+  _order?: string | null;
   title: string;
   /**
    * URL-friendly identifier. Auto-populated from title if left blank.
@@ -364,6 +365,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
+  _order?: T;
   title?: T;
   slug?: T;
   category?: T;
