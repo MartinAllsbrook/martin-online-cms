@@ -1,3 +1,4 @@
+import { ImageGalleryBlock } from '@/blocks/ImageGallery'
 import { ImageSetBlock } from '@/blocks/ImageSet'
 import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { CollectionConfig } from 'payload'
@@ -164,7 +165,10 @@ export const Posts: CollectionConfig = {
                     ...rootFeatures,
                     // Custom features can be added here
                     BlocksFeature({
-                        blocks: [ImageSetBlock],
+                        blocks: [
+                            ImageSetBlock,
+                            ImageGalleryBlock
+                        ],
                     })
                 ],
             }),

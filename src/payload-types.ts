@@ -155,6 +155,10 @@ export interface Media {
    * Comma-separated tags for categorizing the image.
    */
   tags?: string[] | null;
+  /**
+   * The aspect ratio of the image (width divided by height). This is calculated automatically on upload and can be used for layout purposes.
+   */
+  aspectRatio?: number | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -203,7 +207,7 @@ export interface Post {
   /**
    * Comma-separated tags for categorising the post.
    */
-  tags: string[];
+  tags?: string[] | null;
   /**
    * Main image displayed at the top of the post and in previews.
    */
@@ -350,6 +354,7 @@ export interface UsersSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   tags?: T;
+  aspectRatio?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

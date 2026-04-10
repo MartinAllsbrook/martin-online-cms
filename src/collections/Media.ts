@@ -20,7 +20,25 @@ export const Media: CollectionConfig = {
                 position: 'sidebar',
             },
         },
+        {
+            name: 'aspectRatio',
+            type: 'number',
+            admin: {
+                description: 'The aspect ratio of the image (width divided by height). This is calculated automatically on upload and can be used for layout purposes.',
+                position: 'sidebar',
+            },
+        }
     ],
+    hooks: {
+        beforeChange: [
+            ({ data, operation }) => {
+                if (data.width && data.height && (operation === 'create' || !data.aspectRatio)) {
+                    data.aspectRatio = data.width / data.height
+                }
+                return data
+            },
+        ],
+    },
     upload: {
         // These are not supported on Workers yet due to lack of sharp
         crop: false,
